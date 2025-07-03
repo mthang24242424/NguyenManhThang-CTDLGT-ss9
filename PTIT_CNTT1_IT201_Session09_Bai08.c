@@ -13,33 +13,41 @@ Node* createNode(int value) {
     return newNode;
 }
 
-Node* add(Node* head, int value, int pos) {
+Node* deleteAtPosition(Node* head, int pos) {
+    if (head == NULL) {
+        printf("Danh sach rong!\n");
+        return head;
+    }
+
     if (pos < 0) {
         printf("Vi tri khong hop le!\n");
         return head;
     }
-    Node* newNode = createNode(value);
+
     if (pos == 0) {
-        newNode->next = head;
-        return newNode;
+        Node* temp = head;
+        head = head->next;
+        free(temp);
+        return head;
     }
 
     Node* current = head;
     for (int i = 0; i < pos - 1; i++) {
-        if (current == NULL) {
+        if (current == NULL || current->next == NULL) {
             printf("Vi tri vuot qua do dai danh sach!\n");
-            free(newNode);
             return head;
         }
         current = current->next;
     }
-    if (current == NULL) {
+
+    Node* temp = current->next;
+    if (temp == NULL) {
         printf("Vi tri vuot qua do dai danh sach!\n");
-        free(newNode);
         return head;
     }
-    newNode->next = current->next;
-    current->next = newNode;
+
+    current->next = temp->next;
+    free(temp);
     return head;
 }
 
@@ -63,19 +71,16 @@ int main() {
         current = current->next;
     }
 
-    int newValue, pos;
-    printf("Nhap so nguyen duong de them: ");
-    scanf("%d", &newValue);
-    if (newValue <= 0) {
-        printf("So khong hop le!\n");
-        return 1;
-    }
+    printf("Danh sach ban dau: ");
+    printList(head);
 
-    printf("Nhap vi tri muon chen (bat dau tu 0): ");
+    int pos;
+    printf("Nhap vi tri muon xoa (bat dau tu 0): ");
     scanf("%d", &pos);
 
-    head = add(head, newValue, pos);
-    printf("Danh sach sau khi chen: ");
+    head = deleteAtPosition(head, pos);
+
+    printf("Danh sach sau khi xoa: ");
     printList(head);
 
     return 0;
